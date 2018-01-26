@@ -30,7 +30,7 @@
     "jest": "^22.0.6"
   },
   "scripts": {
-    "test": "npm test && jest",
+    "test": "jest",
     "prepublish": "nsp check",
     "pretest": "eslint .",
     "precommit": "lint-staged"
