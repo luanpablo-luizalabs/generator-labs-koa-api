@@ -1,0 +1,64 @@
+jobs:
+  build:
+    docker:
+     - image: "circleci/node:8"
+     - image: "mysql:5.7"
+    working_directory: ~/<%= projectName %>
+    steps:
+      - checkout
+      - run:
+          name: install project dependencies
+          command: "npm install"
+          working_directory: ./
+      - run:
+          name: waiting mysql to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 3306 && echo success && exit 0
+              echo -n .
+              sleep 2
+            done
+            echo failed waiting for mysql && exit 1
+      - run:
+          name: running API tests
+          command: "npm test"
+          environment:
+            NODE_ENV: test
+          working_directory: ./
+  sonar:
+    working_directory: /javascript/src/<%= projectName %>
+    docker:
+      - image: "diegofernandes/sonar-scanner:circleci"
+    steps:
+      - checkout
+      - run:
+          name: "Sonar Scanner"
+          environment:
+            SONAR_TOKEN: ""
+            SONAR_URL: ""
+          command: |
+           if [ "${CI_PULL_REQUEST}" ]; then
+               sonar-scanner -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_TOKEN}  \
+                 -Dsonar.projectKey="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                 -Dsonar.projectName="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                 -Dsonar.github.repository="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}" \
+                 -Dsonar.github.pullRequest=${CI_PULL_REQUEST##*/} \
+                 -Dsonar.github.oauth=${GITHUB_TOKEN} \
+                 -Dsonar.analysis.mode=preview \
+                 -Dsonar.javascript.lcov.reportPath=report/lcov.dat;
+            else
+              sonar-scanner \
+               -Dsonar.host.url=${SONAR_URL} \
+               -Dsonar.login=${SONAR_TOKEN} \
+               -Dsonar.projectKey="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+               -Dsonar.projectName="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+               -Dsonar.javascript.lcov.reportPath=report/lcov.dat;
+            fi
+version: 2
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - sonar

@@ -1,0 +1,110 @@
+{
+  "name": "<%= projectName %>",
+  "version": "1.0.0",
+  "description": "<%= projectDescription %>",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "local": "cross-env NODE_CONFIG_DIR=./src/config NODE_ENV=development npm run migrate && npm run seeds && nodemon --inspect src/server.js",
+    "test": "npm run lint && NODE_CONFIG_DIR=./src/config NODE_ENV=test nyc npm run test-mocha",
+    "test-mocha": "NODE_CONFIG_DIR=./src/config NODE_ENV=test mocha --harmony --exit ./src/**/*.spec.js",
+    "test-mocha-watch": "NODE_CONFIG_DIR=./src/config NODE_ENV=test mocha --watch --harmony ./src/**/*.spec.js",
+    "migrate": "NODE_CONFIG_DIR=./src/config knex migrate:latest",
+    "seeds": "NODE_CONFIG_DIR=./src/config knex seed:run",
+    "precommit": "npm run git-hook",
+    "prepush": "npm run git-hook",
+    "git-hook": "npm run lint -s && npm run test -s",
+    "lint": "standard --verbose | snazzy",
+    "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
+    "fixcode": "standard --fix",
+    "mock-server": "npm install -g drakov && drakov",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+<%= projectURL %>"
+  },
+  "keywords": [
+    "API",
+    "node.js",
+    "koa.js"
+  ],
+  "author": "<%= projectAuthor %>",
+  "license": "ISC",
+  "homepage": "<%= projectURL %>",
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "cross-env": "^5.1.3",
+    "husky": "^0.14.3",
+    "mocha": "^5.0.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nodemon": "^1.14.11",
+    "nyc": "^11.4.1",
+    "should": "^13.2.1",
+    "sinon": "^4.2.2",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.145.0",
+    "axios": "^0.17.1",
+    "axios-retry": "^3.0.1",
+    "bluebird": "^3.5.1",
+    "boom": "^7.1.1",
+    "bunyan": "^1.8.12",
+    "bunyan-logstash": "^0.3.4",
+    "bunyan-logstash-tcp": "^1.0.0",
+    "circular-json": "^0.5.1",
+    "co-body": "^5.1.1",
+    "config": "^1.29.2",
+    "dotenv": "^4.0.0",
+    "joi": "^13.1.1",
+    "jsonwebtoken": "^8.1.1",
+    "knex": "^0.14.2",
+    "koa": "^2.4.1",
+    "koa-bunyan-logger": "^2.0.0",
+    "koa-generic-session": "^2.0.1",
+    "koa-morgan": "^1.0.1",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.3.0",
+    "mysql2": "^1.5.1",
+    "node-slack": "0.0.7",
+    "ramda": "^0.25.0",
+    "raven": "^2.4.0",
+    "sequelize": "^4.32.2"
+  },
+  "engines": {
+    "node": "8.9.4",
+    "npm": "5.6.0"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "it",
+      "test"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js",
+      "src/**/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "exclude": [
+      "packages/**/*"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "all": false
+  }
+}

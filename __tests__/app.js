@@ -1,15 +1,15 @@
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+const path = require('path')
+const assert = require('yeoman-assert')
+const helpers = require('yeoman-test')
 
 describe('generator-labs-koa-api:app', () => {
   beforeAll(() => {
     return helpers
       .run(path.join(__dirname, '../generators/app'))
-      .withPrompts({ someAnswer: true });
-  });
+      .withPrompts({ projectName: 'example-api', projectDescription: 'Example API', projectAuthor: 'test', projectURL: 'https://' })
+  })
 
-  it('creates files', () => {
-    assert.file(['dummyfile.txt']);
-  });
-});
+  it('package.json', () => {
+    assert.file(['package.json'])
+  })
+})

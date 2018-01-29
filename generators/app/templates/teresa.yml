@@ -1,0 +1,21 @@
+healthCheck:
+  liveness:
+    path: /ping
+    timeoutSeconds: 2
+    initialDelaySeconds: 3
+    periodSeconds: 5
+    failureThreshold: 2
+    successThreshold: 1
+  readiness:
+    path: /ping
+    timeoutSeconds: 2
+    initialDelaySeconds: 5
+    periodSeconds: 3
+    failureThreshold: 5
+    successThreshold: 1
+rollingUpdate:
+  maxUnavailable: "10%"
+  maxSurge: "3"
+lifecycle:
+  preStop:
+    drainTimeoutSeconds: 30

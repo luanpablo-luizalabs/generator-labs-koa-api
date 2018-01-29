@@ -1,0 +1,9 @@
+module.exports = {
+  sourceFiles: './apib/*.md',
+  debugMode: true,
+  watch: true,
+  discover: true,
+  public: true,
+  serverPort: 4000,
+  delay: 3000
+}

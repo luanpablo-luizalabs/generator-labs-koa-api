@@ -1,0 +1,35 @@
+pipelines:
+  default:
+    - step:
+        image: node:8
+        script:
+          - npm install
+          - npm test
+    - step:
+        services:
+            - sonar
+        script:
+            - if [ "${CI_PULL_REQUEST}" ]; then
+                sonar-scanner -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_TOKEN}  \
+                  -Dsonar.projectKey="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                  -Dsonar.projectName="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                  -Dsonar.github.repository="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}" \
+                  -Dsonar.github.pullRequest=${CI_PULL_REQUEST##*/} \
+                  -Dsonar.github.oauth=${GITHUB_TOKEN} \
+                  -Dsonar.analysis.mode=preview \
+                  -Dsonar.javascript.lcov.reportPath=report/lcov.dat;
+              else
+                sonar-scanner \
+                 -Dsonar.host.url=${SONAR_URL} \
+                 -Dsonar.login=${SONAR_TOKEN} \
+                 -Dsonar.projectKey="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                 -Dsonar.projectName="${CIRCLE_PROJECT_USERNAME}-${CIRCLE_PROJECT_REPONAME}" \
+                 -Dsonar.javascript.lcov.reportPath=report/lcov.dat;
+              fi
+definitions:
+    services:
+        sonar:
+            image: diegofernandes/sonar-scanner:circleci
+            environment:
+                SONAR_TOKEN: ""
+                SONAR_URL: ""

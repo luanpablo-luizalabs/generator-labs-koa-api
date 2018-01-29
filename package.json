@@ -16,24 +16,29 @@
     "yeoman-generator"
   ],
   "devDependencies": {
-    "yeoman-test": "^1.7.0",
-    "yeoman-assert": "^3.1.0",
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
     "coveralls": "^2.13.1",
-    "nsp": "^2.6.3",
     "eslint": "^4.1.0",
-    "prettier": "^1.7.0",
     "husky": "^0.14.3",
-    "lint-staged": "^4.2.1",
-    "eslint-config-prettier": "^2.4.0",
-    "eslint-plugin-prettier": "^2.2.0",
-    "eslint-config-xo": "^0.18.2",
-    "jest": "^22.0.6"
+    "jest": "^22.0.6",
+    "nsp": "^2.6.3",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "yeoman-assert": "^3.1.0",
+    "yeoman-test": "^1.7.0"
   },
   "scripts": {
-    "test": "jest",
-    "prepublish": "nsp check",
-    "pretest": "eslint .",
-    "precommit": "lint-staged"
+    "test": "npm run lint && jest",
+    "lint": "standard --verbose | snazzy",
+    "fixcode": "standard --fix",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls",
+    "git-hook": "npm run lint -s && npm run test -s",
+    "precommit": "npm run git-hook",
+    "prepush": "npm run git-hook"
   },
   "repository": {
     "type": "git",
@@ -44,43 +49,50 @@
     "url": "https://github.com/luanpablo-luizalabs/generator-labs-koa-api/issues"
   },
   "dependencies": {
-    "yeoman-generator": "^2.0.1",
     "chalk": "^2.1.0",
+    "file": "^0.2.2",
+    "yeoman-generator": "^2.0.1",
     "yosay": "^2.0.1"
   },
   "jest": {
-    "testEnvironment": "node"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.json": [
-      "prettier --write",
-      "git add"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/generators/app/templates/src/"
     ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "it",
+      "test",
+      "beforeAll"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js",
+      "src/**/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "exclude": [
+      "packages/**/*"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "all": false
   },
   "eslintConfig": {
     "extends": [
       "xo",
-      "prettier"
+      "standard"
     ],
     "env": {
       "jest": true,
       "node": true
-    },
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "singleQuote": true,
-          "printWidth": 90
-        }
-      ]
-    },
-    "plugins": [
-      "prettier"
-    ]
+    }
   }
 }
