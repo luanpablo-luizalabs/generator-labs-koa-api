@@ -38,6 +38,8 @@ module.exports = (app) => {
     for (let name in config.apigee.pings) {
       let url = config.apigee.pings[name]
 
+      if (!url) continue
+
       let response = await axios.get(url, {headers: {'Authorization': config.apigee.token}})
 
       pings.push({

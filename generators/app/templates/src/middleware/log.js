@@ -29,5 +29,16 @@ const configLogger = {
   }
 }
 
-const logger = bunyan.createLogger(configLogger)
+let logger
+
+if (config.logging) {
+  logger = bunyan.createLogger(configLogger)
+} else {
+  logger = () => {}
+  logger.debug = () => {}
+  logger.info = () => {}
+  logger.warn = () => {}
+  logger.error = () => {}
+}
+
 module.exports = logger

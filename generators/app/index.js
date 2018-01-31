@@ -5,6 +5,12 @@ const file = require('file')
 const path = require('path')
 
 module.exports = class extends Generator {
+  constructor (args, opts) {
+    super(args, opts)
+
+    this.spawnCommandSync('git', ['init'])
+  }
+
   prompting () {
     // Have Yeoman greet the user.
     this.log(
@@ -75,11 +81,14 @@ module.exports = class extends Generator {
   }
 
   install () {
-    this.installDependencies()
+    this.installDependencies({
+      npm: true,
+      bower: false,
+      yarn: false
+    })
   }
 
   end () {
-    this.spawnCommandSync('git', ['init'])
     this.spawnCommandSync('git', ['add', '--all'])
     this.spawnCommandSync('git', ['commit', '-m', '"initial commit from generator"'])
   }

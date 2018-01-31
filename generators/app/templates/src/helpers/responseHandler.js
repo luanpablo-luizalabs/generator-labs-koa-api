@@ -1,6 +1,6 @@
 const boom = require('boom')
 const qs = require('querystring')
-const commons = require('luizalabs-nodejs-commons')
+const commons = require('labs-standard-errors')
 
 const buildJoiError = commons.buildJoiError
 const buildGenericErrors = commons.buildGenericErrors

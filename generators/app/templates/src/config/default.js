@@ -9,6 +9,7 @@ var base = {
   root: root,
   port: process.env.PORT || 9000,
   knexDialect: process.env.KNEX_DIALECT || 'mysql2',
+  logging: process.env.SHOULD_LOG === 'true', // default false
   db: {
     name: process.env.DB_NAME || '<%= projectUnderscoredName %>',
     username: process.env.DB_USERNAME || '<%= projectUnderscoredName %>',
@@ -34,7 +35,7 @@ var base = {
   logs: [{
     level: process.env.BURZUM_LOG_INFO || 'info',
     type: 'raw',
-    enabled: process.env.BURZUM_ENABLED !== 'false',
+    enabled: process.env.BURZUM_ENABLED === 'true', // default false
     stream: {
       host: process.env.BURZUM_HOST || '',
       port: process.env.BURZUM_PORT || 5030,

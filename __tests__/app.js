@@ -9,7 +9,7 @@ describe('generator-labs-koa-api:app', () => {
       .withPrompts({ projectName: 'example-api', projectDescription: 'Example API', projectAuthor: 'test', projectURL: 'https://' })
   })
 
-  it('package.json', () => {
+  it('has package.json', () => {
     assert.file(['package.json'])
   })
 })
