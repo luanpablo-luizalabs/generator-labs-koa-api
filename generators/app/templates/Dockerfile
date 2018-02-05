@@ -4,7 +4,7 @@ EXPOSE 8080
 
 WORKDIR /usr/src/app
 
-COPY .npmrc package.json package-lock.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
 
