@@ -69,7 +69,7 @@ var base = {
     }
   },
   request: {
-    retries: 3
+    retries: process.env.REQUEST_RETRIES || 3
   }
 }
 
