@@ -74,7 +74,7 @@
     "koa-morgan": "^1.0.1",
     "koa-mount": "^3.0.0",
     "koa-router": "^7.3.0",
-    "labs-standard-errors": "^1.0.2",
+    "labs-standard-errors": "^1.1.0",
     "mysql2": "^1.5.1",
     "node-slack": "0.0.7",
     "ramda": "^0.25.0",

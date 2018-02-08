@@ -57,7 +57,8 @@ ResponseHandler.parser = (error, apigeeErrorCode, sourceValidation) => {
  */
 ResponseHandler.errorHandler.errorResponse = (error) => {
   let newResponse = {}
-  if (error.data && error.data.details) {
+
+  if (error.data && (error.data.details || (error.data.parameters && error.data.parameters.details))) {
     newResponse = buildJoiError(error)
   } else if (error.data && error.data.errorCode) {
     newResponse = errorParser(error.data.errorCode, error.data.parameters)
